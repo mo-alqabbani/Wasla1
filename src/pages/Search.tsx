@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search as SearchIcon, MapPin, Clock, DollarSign, Navigation } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface RouteResult {
   id: string;
@@ -14,6 +15,8 @@ interface RouteResult {
 }
 
 export default function Search() {
+  const { t } = useLanguage();
+
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
   const [results, setResults] = useState<RouteResult[]>([]);
@@ -71,35 +74,35 @@ export default function Search() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Route Planner</h1>
-        <p className="text-gray-600">Plan your journey across Egypt with detailed step-by-step directions.</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">{t('routePlanner')}</h1>
+        <p className="text-gray-600">{t('planJourney')}</p>
       </div>
 
       {/* Search Form */}
       <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">From</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('from')}</label>
             <div className="relative">
               <MapPin className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <input
                 type="text"
                 value={origin}
                 onChange={(e) => setOrigin(e.target.value)}
-                placeholder="Enter starting location"
+                placeholder={t('enterStarting')}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">To</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('to')}</label>
             <div className="relative">
               <Navigation className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <input
                 type="text"
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
-                placeholder="Enter destination"
+                placeholder={t('enterDestination')}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -116,13 +119,13 @@ export default function Search() {
           ) : (
             <SearchIcon className="h-5 w-5 mr-2" />
           )}
-          {isSearching ? 'Searching...' : 'Find Routes'}
+          {isSearching ? t('searching') : t('findRoutes')}
         </button>
       </div>
 
       {/* Map Placeholder */}
       <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Route Map</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('routeMap')}</h2>
         <div className="h-64 bg-gradient-to-br from-blue-100 to-amber-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
           <div className="text-center">
             <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-2" />
@@ -135,7 +138,7 @@ export default function Search() {
       {/* Search Results */}
       {results.length > 0 && (
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900">Route Options</h2>
+          <h2 className="text-2xl font-bold text-gray-900">{t('routeOptions')}</h2>
           {results.map((route) => (
             <div key={route.id} className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
               <div className="flex items-center justify-between mb-4">

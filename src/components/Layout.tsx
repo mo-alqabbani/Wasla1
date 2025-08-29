@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, MapPin, MessageCircle, Search, Users, Coins } from 'lucide-react';
+import { Menu, X, MapPin, MessageCircle, Search, Users, Coins, Languages } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -9,14 +10,15 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const { language, toggleLanguage, t } = useLanguage();
 
   const navigation = [
-    { name: 'Home', href: '/', icon: MapPin },
-    { name: 'ChatBot', href: '/chatbot', icon: MessageCircle },
-    { name: 'Search', href: '/search', icon: Search },
-    { name: 'Important Stops', href: '/stops', icon: MapPin },
-    { name: 'User Routes', href: '/user-routes', icon: Users },
-    { name: 'Credits', href: '/credits', icon: Coins },
+    { name: t('home'), href: '/', icon: MapPin },
+    { name: t('chatbot'), href: '/chatbot', icon: MessageCircle },
+    { name: t('search'), href: '/search', icon: Search },
+    { name: t('importantStops'), href: '/stops', icon: MapPin },
+    { name: t('userRoutes'), href: '/user-routes', icon: Users },
+    { name: t('credits'), href: '/credits', icon: Coins },
   ];
 
   return (
@@ -51,6 +53,15 @@ export default function Layout({ children }: LayoutProps) {
                   </Link>
                 );
               })}
+              
+              {/* Language Toggle */}
+              <button
+                onClick={toggleLanguage}
+                className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-amber-600 hover:bg-amber-50 transition-colors"
+              >
+                <Languages className="h-4 w-4" />
+                <span>{language === 'en' ? 'العربية' : 'English'}</span>
+              </button>
             </nav>
 
             {/* Mobile menu button */}
@@ -87,6 +98,18 @@ export default function Layout({ children }: LayoutProps) {
                   </Link>
                 );
               })}
+              
+              {/* Mobile Language Toggle */}
+              <button
+                onClick={() => {
+                  toggleLanguage();
+                  setIsMenuOpen(false);
+                }}
+                className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-amber-600 hover:bg-amber-50 transition-colors"
+              >
+                <Languages className="h-5 w-5" />
+                <span>{language === 'en' ? 'العربية' : 'English'}</span>
+              </button>
             </div>
           </div>
         )}
@@ -101,7 +124,7 @@ export default function Layout({ children }: LayoutProps) {
       <footer className="bg-white border-t border-amber-200 mt-auto">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <div className="text-center text-gray-600">
-            <p>&copy; 2025 Wasla. Connecting all of Egypt, one route at a time.</p>
+            <p>&copy; 2025 Wasla. {t('footerText')}</p>
           </div>
         </div>
       </footer>

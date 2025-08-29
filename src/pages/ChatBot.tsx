@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Send, MessageCircle, MapPin, Clock, DollarSign } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface Message {
   id: string;
@@ -17,10 +18,12 @@ interface RouteOption {
 }
 
 export default function ChatBot() {
+  const { t } = useLanguage();
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Hello! I\'m your Egypt Transportation assistant. Ask me about getting from one place to another, like "How do I get from Nasr City to 6th of October City?"',
+      text: t('askAnything'),
       isUser: false,
       timestamp: new Date(),
     },
@@ -93,9 +96,9 @@ export default function ChatBot() {
         <div className="bg-gradient-to-r from-blue-600 to-amber-600 px-6 py-4">
           <div className="flex items-center">
             <MessageCircle className="h-6 w-6 text-white mr-2" />
-            <h1 className="text-xl font-bold text-white">Wasla Assistant</h1>
+            <h1 className="text-xl font-bold text-white">{t('waslaAssistant')}</h1>
           </div>
-          <p className="text-blue-100 mt-1">Ask me anything about getting around Egypt!</p>
+          <p className="text-blue-100 mt-1">{t('askAnything')}</p>
         </div>
 
         {/* Chat Messages */}
