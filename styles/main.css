@@ -292,3 +292,73 @@ input:focus, select:focus {
     display: flex;
     align-items: center;
 }
+
+/* Authentication styles */
+.auth-tab {
+    color: #6b7280;
+    background-color: transparent;
+}
+
+.auth-tab.active {
+    background-color: white;
+    color: #1f2937;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.auth-form {
+    display: none;
+}
+
+.auth-form.active {
+    display: block;
+}
+
+/* Country selection styles */
+#country-selection {
+    backdrop-filter: blur(10px);
+}
+
+/* Feature locked modal */
+#feature-locked-modal .bg-white {
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* User menu styles */
+#user-menu {
+    border-left: 1px solid #e5e7eb;
+    padding-left: 1rem;
+}
+
+/* Enhanced hover effects */
+.feature-card:hover .explore-text {
+    color: #d97706;
+}
+
+/* Currency display */
+.currency-symbol {
+    font-weight: 600;
+    color: #059669;
+}
+
+/* Responsive improvements */
+@media (max-width: 640px) {
+    #country-selection .bg-white {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .feature-card {
+        padding: 1rem;
+    }
+}

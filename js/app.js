@@ -121,6 +121,11 @@ function toggleLanguage() {
 
 // ChatBot functions
 function sendMessage() {
+    // Check authentication and credits
+    if (!deductCredit()) {
+        return;
+    }
+    
     const chatInput = document.getElementById('chat-input');
     const message = chatInput.value.trim();
     
@@ -304,6 +309,11 @@ function addRouteOptions() {
 
 // Search functions
 function searchRoutes() {
+    // Check authentication and credits
+    if (!deductCredit()) {
+        return;
+    }
+    
     const origin = document.getElementById('origin-input').value.trim();
     const destination = document.getElementById('destination-input').value.trim();
     
@@ -784,8 +794,35 @@ function loadCreditPackages() {
 }
 
 function purchaseCredits(packageId) {
-    alert(currentLanguage === 'ar' 
-        ? 'سيتم توجيهك إلى صفحة الدفع قريباً'
-        : 'You will be redirected to payment page soon'
+    if (!isAuthenticated) {
+        showFeatureLockedModal();
+        return;
+    }
+    
+    // Get package details
+    const packages = {
+        'basic': { credits: 20, price: 10 },
+        'standard': { credits: 55, price: 20 }, // 50 + 5 bonus
+        'premium': { credits: 115, price: 35 }  // 100 + 15 bonus
+    };
+    
+    const selectedPackage = packages[packageId];
+    if (!selectedPackage) return;
+    
+    // Simulate payment process
+    const confirmPurchase = confirm(
+        currentLanguage === 'ar' 
+            ? `هل تريد شراء ${selectedPackage.credits} رصيد مقابل ${selectedPackage.price} ${currentUser.currency}؟`
+            : `Do you want to purchase ${selectedPackage.credits} credits for ${selectedPackage.price} ${currentUser.currency}?`
     );
+    
+    if (confirmPurchase) {
+        // Add credits to user account
+        addCredits(selectedPackage.credits);
+        
+        alert(currentLanguage === 'ar' 
+            ? `تم شراء ${selectedPackage.credits} رصيد بنجاح!`
+            : `Successfully purchased ${selectedPackage.credits} credits!`
+        );
+    }
 }

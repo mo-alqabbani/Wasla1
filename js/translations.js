@@ -69,6 +69,26 @@ const translations = {
         
         // Language
         languageText: 'English',
+        
+        // Authentication
+        createAccount: 'إنشاء حساب',
+        signIn: 'تسجيل الدخول',
+        logout: 'تسجيل الخروج',
+        fullName: 'الاسم الكامل',
+        email: 'البريد الإلكتروني',
+        password: 'كلمة المرور',
+        preferredCurrency: 'العملة المفضلة',
+        createAccountWithCredits: 'إنشاء حساب + 10 رصيد مجاني',
+        welcomeBack: 'مرحباً بعودتك إلى وصلة!',
+        joinCommunity: 'انضم إلى مجتمع وصلة واحصل على رصيد مجاني!',
+        loginRequired: 'تسجيل الدخول مطلوب',
+        loginRequiredDesc: 'يجب إنشاء حساب أو تسجيل الدخول لاستخدام هذه الميزة',
+        
+        // Country selection
+        welcomeToWasla: 'مرحباً بك في وصلة',
+        whichCountry: 'أي دولة تريد معرفة طرق المواصلات فيها؟',
+        egypt: 'مصر',
+        otherCountries: 'دول أخرى',
     },
     en: {
         // Navigation
@@ -139,6 +159,26 @@ const translations = {
         
         // Language
         languageText: 'العربية',
+        
+        // Authentication
+        createAccount: 'Create Account',
+        signIn: 'Sign In',
+        logout: 'Logout',
+        fullName: 'Full Name',
+        email: 'Email',
+        password: 'Password',
+        preferredCurrency: 'Preferred Currency',
+        createAccountWithCredits: 'Create Account + 10 Free Credits',
+        welcomeBack: 'Welcome back to Wasla!',
+        joinCommunity: 'Join Wasla community and get free credits!',
+        loginRequired: 'Login Required',
+        loginRequiredDesc: 'You need to create an account or sign in to use this feature',
+        
+        // Country selection
+        welcomeToWasla: 'Welcome to Wasla',
+        whichCountry: 'Which country do you want to know about transportation methods in?',
+        egypt: 'Egypt',
+        otherCountries: 'Other Countries',
     }
 };
 
@@ -214,7 +254,11 @@ function updatePageContent() {
         'user-routes-subtitle', 'add-route-text', 'credits-title', 'credits-subtitle',
         'balance-title', 'credits-text', 'usage-info', 'purchase-title', 'footer-text',
         'modal-title', 'route-name-label', 'from-modal-label', 'to-modal-label',
-        'cancel-text', 'submit-text'
+        'cancel-text', 'submit-text', 'create-account', 'sign-in', 'logout-text',
+        'full-name', 'email-label', 'password-label', 'preferred-currency',
+        'create-account-with-credits', 'welcome-back', 'join-community',
+        'login-required', 'login-required-desc', 'welcome-to-wasla',
+        'which-country', 'egypt-text', 'other-countries'
     ];
     
     elementsToUpdate.forEach(className => {
@@ -281,7 +325,23 @@ function getTranslationKey(className) {
         'from-modal-label': 'from',
         'to-modal-label': 'to',
         'cancel-text': 'cancel',
-        'submit-text': 'submitRoute'
+        'submit-text': 'submitRoute',
+        'create-account': 'createAccount',
+        'sign-in': 'signIn',
+        'logout-text': 'logout',
+        'full-name': 'fullName',
+        'email-label': 'email',
+        'password-label': 'password',
+        'preferred-currency': 'preferredCurrency',
+        'create-account-with-credits': 'createAccountWithCredits',
+        'welcome-back': 'welcomeBack',
+        'join-community': 'joinCommunity',
+        'login-required': 'loginRequired',
+        'login-required-desc': 'loginRequiredDesc',
+        'welcome-to-wasla': 'welcomeToWasla',
+        'which-country': 'whichCountry',
+        'egypt-text': 'egypt',
+        'other-countries': 'otherCountries'
     };
     
     return keyMap[className];
