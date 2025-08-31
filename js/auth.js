@@ -1,5 +1,15 @@
 // Authentication system for Wasla
 
+// Performance: Cache DOM elements
+const domCache = new Map();
+
+function getCachedElement(id) {
+    if (!domCache.has(id)) {
+        domCache.set(id, document.getElementById(id));
+    }
+    return domCache.get(id);
+}
+
 // User state
 let currentUser = null;
 let isAuthenticated = false;
@@ -23,15 +33,18 @@ function checkAuthStatus() {
 
 function updateUIForAuthenticatedUser() {
     // Hide auth button, show user menu
-    const authButton = document.getElementById('auth-button');
-    const userMenu = document.getElementById('user-menu');
-    const mobileAuthButton = document.getElementById('mobile-auth-button');
-    const mobileUserMenu = document.getElementById('mobile-user-menu');
+    const authButton = getCachedElement('auth-button');
+    const userMenu = getCachedElement('user-menu');
+    const mobileAuthButton = getCachedElement('mobile-auth-button');
+    const mobileUserMenu = getCachedElement('mobile-user-menu');
     
-    if (authButton) authButton.classList.add('hidden');
-    if (userMenu) userMenu.classList.remove('hidden');
-    if (mobileAuthButton) mobileAuthButton.classList.add('hidden');
-    if (mobileUserMenu) mobileUserMenu.classList.remove('hidden');
+    // Batch DOM updates
+    requestAnimationFrame(() => {
+        if (authButton) authButton.classList.add('hidden');
+        if (userMenu) userMenu.classList.remove('hidden');
+        if (mobileAuthButton) mobileAuthButton.classList.add('hidden');
+        if (mobileUserMenu) mobileUserMenu.classList.remove('hidden');
+    });
     
     // Update user info
     updateUserInfo();
@@ -39,32 +52,65 @@ function updateUIForAuthenticatedUser() {
 
 function updateUIForUnauthenticatedUser() {
     // Show auth button, hide user menu
-    const authButton = document.getElementById('auth-button');
-    const userMenu = document.getElementById('user-menu');
-    const mobileAuthButton = document.getElementById('mobile-auth-button');
-    const mobileUserMenu = document.getElementById('mobile-user-menu');
+    const authButton = getCachedElement('auth-button');
+    const userMenu = getCachedElement('user-menu');
+    const mobileAuthButton = getCachedElement('mobile-auth-button');
+    const mobileUserMenu = getCachedElement('mobile-user-menu');
     
-    if (authButton) authButton.classList.remove('hidden');
-    if (userMenu) userMenu.classList.add('hidden');
-    if (mobileAuthButton) mobileAuthButton.classList.remove('hidden');
-    if (mobileUserMenu) mobileUserMenu.classList.add('hidden');
+    // Batch DOM updates
+    requestAnimationFrame(() => {
+        if (authButton) authButton.classList.remove('hidden');
+        if (userMenu) userMenu.classList.add('hidden');
+        if (mobileAuthButton) mobileAuthButton.classList.remove('hidden');
+        if (mobileUserMenu) mobileUserMenu.classList.add('hidden');
+    });
 }
 
 function updateUserInfo() {
     if (!currentUser) return;
     
-    // Update user name and initials
-    const userNameElements = document.querySelectorAll('#user-name, #mobile-user-name');
-    const userInitialsElements = document.querySelectorAll('#user-initials, #mobile-user-initials');
-    const userCreditsElements = document.querySelectorAll('#user-credits, #mobile-user-credits, #balance-credits');
-    
-    userNameElements.forEach(el => el.textContent = currentUser.name);
-    userInitialsElements.forEach(el => el.textContent = getInitials(currentUser.name));
-    userCreditsElements.forEach(el => el.textContent = currentUser.credits);
+    // Cache and batch DOM updates
+    requestAnimationFrame(() => {
+        const userNameElements = document.querySelectorAll('#user-name, #mobile-user-name');
+        const userInitialsElements = document.querySelectorAll('#user-initials, #mobile-user-initials');
+        const userCreditsElements = document.querySelectorAll('#user-credits, #mobile-user-credits, #balance-credits');
+        
+        const initials = getInitials(currentUser.name);
+        
+        userNameElements.forEach(el => el.textContent = currentUser.name);
+        userInitialsElements.forEach(el => el.textContent = initials);
+        userCreditsElements.forEach(el => el.textContent = currentUser.credits);
+    });
 }
 
+// Memoize initials calculation
+const initialsCache = new Map();
+
 function getInitials(name) {
-    return name.split(' ').map(n => n[0]).join('').toUpperCase();
+    if (initialsCache.has(name)) {
+        return initialsCache.get(name);
+    }
+    
+    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+    initialsCache.set(name, initials);
+    return initials;
+}
+
+// Optimized modal functions
+function showAuthModal() {
+    const modal = getCachedElement('auth-modal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        switchAuthTab('signup'); // Default to signup
+    }
+}
+
+function hideAuthModal() {
+    const modal = getCachedElement('auth-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        clearAuthForms();
+    }
 }
 
 // Country selection

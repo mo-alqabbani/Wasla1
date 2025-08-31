@@ -1,8 +1,23 @@
 /* Custom styles for Wasla app */
 
+/* Performance optimizations */
+* {
+    box-sizing: border-box;
+}
+
+img {
+    will-change: transform;
+}
+
+.stop-card, .route-card, .credit-package {
+    will-change: transform, box-shadow;
+}
+
 /* Arabic font support */
 body {
     font-family: 'Cairo', 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* RTL Support */
