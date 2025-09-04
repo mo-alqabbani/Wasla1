@@ -405,6 +405,8 @@ async function addCredits(amount) {
         currentUser.credits = newCredits;
         updateUserInfo();
     } catch (error) {
+    }
+}
 // Check if country selection was already made
 document.addEventListener('DOMContentLoaded', function() {
     const selectedCountry = localStorage.getItem('selectedCountry');
