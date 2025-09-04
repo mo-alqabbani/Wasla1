@@ -1,4 +1,11 @@
 // Authentication system for Wasla
+import { 
+  createUser, 
+  signInUser, 
+  signOutUser, 
+  getCurrentUser, 
+  updateUserCredits 
+} from './supabase.js';
 
 // Performance: Cache DOM elements
 const domCache = new Map();
@@ -16,17 +23,22 @@ let isAuthenticated = false;
 
 // Initialize authentication on page load
 document.addEventListener('DOMContentLoaded', function() {
-    checkAuthStatus();
+    initializeAuth();
 });
 
-function checkAuthStatus() {
-    // Check if user is stored in localStorage
-    const storedUser = localStorage.getItem('waslaUser');
-    if (storedUser) {
-        currentUser = JSON.parse(storedUser);
-        isAuthenticated = true;
-        updateUIForAuthenticatedUser();
-    } else {
+async function initializeAuth() {
+    try {
+        const { data: user, error } = await getCurrentUser();
+        
+        if (user && !error) {
+            currentUser = user;
+            isAuthenticated = true;
+            updateUIForAuthenticatedUser();
+        } else {
+            updateUIForUnauthenticatedUser();
+        }
+    } catch (error) {
+        console.error('Error initializing auth:', error);
         updateUIForUnauthenticatedUser();
     }
 }
@@ -127,16 +139,6 @@ function selectCountry(country) {
 }
 
 // Authentication functions
-function showAuthModal() {
-    document.getElementById('auth-modal').classList.remove('hidden');
-    switchAuthTab('signup'); // Default to signup
-}
-
-function hideAuthModal() {
-    document.getElementById('auth-modal').classList.add('hidden');
-    clearAuthForms();
-}
-
 function switchAuthTab(tab) {
     const signupTab = document.getElementById('signup-tab');
     const loginTab = document.getElementById('login-tab');
@@ -164,7 +166,7 @@ function switchAuthTab(tab) {
     }
 }
 
-function handleSignup() {
+async function handleSignup() {
     const name = document.getElementById('signup-name').value.trim();
     const email = document.getElementById('signup-email').value.trim();
     const password = document.getElementById('signup-password').value.trim();
@@ -194,32 +196,48 @@ function handleSignup() {
         return;
     }
     
-    // Create user account
-    currentUser = {
-        id: generateUserId(),
-        name: name,
-        email: email,
-        currency: currency,
-        credits: 10, // Free signup credits
-        joinDate: new Date().toISOString()
-    };
-    
-    // Save to localStorage
-    localStorage.setItem('waslaUser', JSON.stringify(currentUser));
-    isAuthenticated = true;
-    
-    // Update UI
-    updateUIForAuthenticatedUser();
-    hideAuthModal();
-    
-    // Show success message
-    alert(currentLanguage === 'ar' 
-        ? 'تم إنشاء حسابك بنجاح! حصلت على 10 رصيد مجاني.'
-        : 'Account created successfully! You received 10 free credits.'
-    );
+    try {
+        // Show loading state
+        const submitButton = document.querySelector('#signup-form button[type="submit"]');
+        const originalText = submitButton.textContent;
+        submitButton.textContent = currentLanguage === 'ar' ? 'جاري الإنشاء...' : 'Creating...';
+        submitButton.disabled = true;
+        
+        const { data, error } = await createUser({
+            name,
+            email,
+            password,
+            currency
+        });
+        
+        if (error) throw error;
+        
+        currentUser = data;
+        isAuthenticated = true;
+        
+        // Update UI
+        updateUIForAuthenticatedUser();
+        hideAuthModal();
+        
+        // Show success message
+        alert(currentLanguage === 'ar' 
+            ? 'تم إنشاء حسابك بنجاح! حصلت على 10 رصيد مجاني.'
+            : 'Account created successfully! You received 10 free credits.'
+        );
+    } catch (error) {
+        alert(currentLanguage === 'ar' 
+            ? `خطأ في إنشاء الحساب: ${error.message}`
+            : `Error creating account: ${error.message}`
+        );
+    } finally {
+        // Reset button state
+        const submitButton = document.querySelector('#signup-form button[type="submit"]');
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
+    }
 }
 
-function handleLogin() {
+async function handleLogin() {
     const email = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value.trim();
     
@@ -231,7 +249,6 @@ function handleLogin() {
         return;
     }
     
-    // For demo purposes, accept any valid email/password combination
     if (!isValidEmail(email)) {
         alert(currentLanguage === 'ar' 
             ? 'يرجى إدخال بريد إلكتروني صحيح'
@@ -240,46 +257,62 @@ function handleLogin() {
         return;
     }
     
-    // Simulate login (in real app, this would be API call)
-    currentUser = {
-        id: generateUserId(),
-        name: 'محمد محمد', // Default name for demo
-        email: email,
-        currency: 'EGP',
-        credits: 15,
-        joinDate: new Date().toISOString()
-    };
-    
-    // Save to localStorage
-    localStorage.setItem('waslaUser', JSON.stringify(currentUser));
-    isAuthenticated = true;
-    
-    // Update UI
-    updateUIForAuthenticatedUser();
-    hideAuthModal();
-    
-    // Show success message
-    alert(currentLanguage === 'ar' 
-        ? 'تم تسجيل الدخول بنجاح!'
-        : 'Logged in successfully!'
-    );
+    try {
+        // Show loading state
+        const submitButton = document.querySelector('#login-form button[type="submit"]');
+        const originalText = submitButton.textContent;
+        submitButton.textContent = currentLanguage === 'ar' ? 'جاري تسجيل الدخول...' : 'Signing in...';
+        submitButton.disabled = true;
+        
+        const { data, error } = await signInUser(email, password);
+        
+        if (error) throw error;
+        
+        currentUser = data.user;
+        isAuthenticated = true;
+        
+        // Update UI
+        updateUIForAuthenticatedUser();
+        hideAuthModal();
+        
+        // Show success message
+        alert(currentLanguage === 'ar' 
+            ? 'تم تسجيل الدخول بنجاح!'
+            : 'Logged in successfully!'
+        );
+    } catch (error) {
+        alert(currentLanguage === 'ar' 
+            ? `خطأ في تسجيل الدخول: ${error.message}`
+            : `Error signing in: ${error.message}`
+        );
+    } finally {
+        // Reset button state
+        const submitButton = document.querySelector('#login-form button[type="submit"]');
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
+    }
 }
 
-function logout() {
-    currentUser = null;
-    isAuthenticated = false;
-    localStorage.removeItem('waslaUser');
-    
-    // Update UI
-    updateUIForUnauthenticatedUser();
-    
-    // Redirect to home page
-    showPage('home');
-    
-    alert(currentLanguage === 'ar' 
-        ? 'تم تسجيل الخروج بنجاح'
-        : 'Logged out successfully'
-    );
+async function logout() {
+    try {
+        await signOutUser();
+        
+        currentUser = null;
+        isAuthenticated = false;
+        
+        // Update UI
+        updateUIForUnauthenticatedUser();
+        
+        // Redirect to home page
+        showPage('home');
+        
+        alert(currentLanguage === 'ar' 
+            ? 'تم تسجيل الخروج بنجاح'
+            : 'Logged out successfully'
+        );
+    } catch (error) {
+        console.error('Error logging out:', error);
+    }
 }
 
 function clearAuthForms() {
@@ -333,7 +366,7 @@ function generateUserId() {
 }
 
 // Credit management
-function deductCredit() {
+async function deductCredit() {
     if (!isAuthenticated || !currentUser) return false;
     
     if (currentUser.credits <= 0) {
@@ -345,20 +378,33 @@ function deductCredit() {
         return false;
     }
     
-    currentUser.credits--;
-    localStorage.setItem('waslaUser', JSON.stringify(currentUser));
-    updateUserInfo();
-    return true;
+    try {
+        const newCredits = currentUser.credits - 1;
+        const { data, error } = await updateUserCredits(currentUser.id, newCredits);
+        
+        if (error) throw error;
+        
+        currentUser.credits = newCredits;
+        updateUserInfo();
+        return true;
+    } catch (error) {
+        console.error('Error deducting credit:', error);
+        return false;
+    }
 }
 
-function addCredits(amount) {
+async function addCredits(amount) {
     if (!isAuthenticated || !currentUser) return;
     
-    currentUser.credits += amount;
-    localStorage.setItem('waslaUser', JSON.stringify(currentUser));
-    updateUserInfo();
-}
-
+    try {
+        const newCredits = currentUser.credits + amount;
+        const { data, error } = await updateUserCredits(currentUser.id, newCredits);
+        
+        if (error) throw error;
+        
+        currentUser.credits = newCredits;
+        updateUserInfo();
+    } catch (error) {
 // Check if country selection was already made
 document.addEventListener('DOMContentLoaded', function() {
     const selectedCountry = localStorage.getItem('selectedCountry');
