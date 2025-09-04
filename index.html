@@ -108,7 +108,7 @@
                     </div>
                 </div>
                 
-                <button onclick="handleSignup()" class="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                <button type="submit" onclick="handleSignup(); return false;" class="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
                     إنشاء حساب + 10 رصيد مجاني
                 </button>
             </div>
@@ -126,7 +126,7 @@
                     </div>
                 </div>
                 
-                <button onclick="handleLogin()" class="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                <button type="submit" onclick="handleLogin(); return false;" class="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
                     تسجيل الدخول
                 </button>
             </div>
@@ -223,31 +223,41 @@
                     </button>
                 </nav>
 
-                <!-- User Menu (when logged in) -->
-                <div id="user-menu" class="hidden md:flex items-center space-x-4">
-                    <div class="flex items-center space-x-2 text-sm text-gray-600">
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                <div class="flex items-center space-x-4">
+                    <!-- Country Change Button -->
+                    <button onclick="changeCountry()" class="flex items-center space-x-1 px-3 py-2 text-sm font-medium text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <span id="user-credits">10</span>
-                        <span>رصيد</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                            <span class="text-white text-sm font-semibold" id="user-initials">م م</span>
-                        </div>
-                        <span class="text-sm font-medium text-gray-900" id="user-name">محمد محمد</span>
-                    </div>
-                    <button onclick="logout()" class="text-sm text-red-600 hover:text-red-700">
-                        تسجيل الخروج
+                        <span class="country-text">مصر</span>
                     </button>
-                </div>
 
-                <!-- Auth Button (when not logged in) -->
-                <div id="auth-button" class="hidden md:block">
-                    <button onclick="showAuthModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
-                        تسجيل الدخول
-                    </button>
+                    <!-- User Menu (when logged in) -->
+                    <div id="user-menu" class="hidden md:flex items-center space-x-4">
+                        <div class="flex items-center space-x-2 text-sm text-gray-600">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                            </svg>
+                            <span id="user-credits">10</span>
+                            <span>رصيد</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                                <span class="text-white text-sm font-semibold" id="user-initials">م م</span>
+                            </div>
+                            <span class="text-sm font-medium text-gray-900" id="user-name">محمد محمد</span>
+                        </div>
+                        <button onclick="logout()" class="text-sm text-red-600 hover:text-red-700">
+                            تسجيل الخروج
+                        </button>
+                    </div>
+
+                    <!-- Auth Button (when not logged in) -->
+                    <div id="auth-button" class="hidden md:block">
+                        <button onclick="showAuthModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                            تسجيل الدخول
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Mobile menu button -->
@@ -304,13 +314,23 @@
                     <span class="mobile-nav-text">الرصيد</span>
                 </a>
                 
-                <!-- Mobile Language Toggle -->
-                <button onclick="toggleLanguage(); toggleMobileMenu()" class="mobile-nav-link language-toggle">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
-                    </svg>
-                    <span class="mobile-language-text">English</span>
-                </button>
+                <div class="flex items-center space-x-4">
+                    <!-- Country Change Button -->
+                    <button onclick="changeCountry()" class="flex items-center space-x-1 px-3 py-2 text-sm font-medium text-gray-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="mobile-country-text">مصر</span>
+                    </button>
+                    
+                    <!-- Language Toggle -->
+                    <button onclick="toggleLanguage(); toggleMobileMenu()" class="mobile-nav-link language-toggle">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+                        </svg>
+                        <span class="mobile-language-text">English</span>
+                    </button>
+                </div>
                 
                 <!-- Mobile Auth Button -->
                 <div id="mobile-auth-button" class="px-2 py-1">
@@ -721,7 +741,7 @@
                     <button onclick="hideAddRouteModal()" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors cancel-text">
                         إلغاء
                     </button>
-                    <button onclick="submitRoute()" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors submit-text">
+                    <button type="submit" onclick="submitRoute(); return false;" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors submit-text">
                         إرسال الطريق
                     </button>
                 </div>

@@ -89,6 +89,7 @@ const translations = {
         whichCountry: 'أي دولة تريد معرفة طرق المواصلات فيها؟',
         egypt: 'مصر',
         otherCountries: 'دول أخرى',
+        changeCountry: 'تغيير الدولة',
     },
     en: {
         // Navigation
@@ -179,6 +180,7 @@ const translations = {
         whichCountry: 'Which country do you want to know about transportation methods in?',
         egypt: 'Egypt',
         otherCountries: 'Other Countries',
+        changeCountry: 'Change Country',
     }
 };
 
@@ -222,6 +224,14 @@ function updateTranslations() {
     });
     document.querySelectorAll('.mobile-language-text').forEach(el => {
         el.textContent = t('languageText');
+    });
+    
+    // Update country button text
+    document.querySelectorAll('.country-text').forEach(el => {
+        el.textContent = t('egypt');
+    });
+    document.querySelectorAll('.mobile-country-text').forEach(el => {
+        el.textContent = t('egypt');
     });
     
     // Update page content
