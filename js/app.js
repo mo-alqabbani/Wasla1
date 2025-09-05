@@ -871,10 +871,7 @@ function getModeColor_old(mode) {
     return modeColors[mode] || 'bg-gray-100 text-gray-800';
 }
 
-// Important Stops functions (optimized)
-function loadImportantStops() {
-    const stopsGrid = document.getElementById('stops-grid');
-    if (!stopsGrid) return;
+
     
     const stops = [
         {
